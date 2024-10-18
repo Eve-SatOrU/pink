@@ -25,22 +25,30 @@ exports.postAdminRegistration = async (req, res, next) => {
   }
 };
 
-exports.postLogin= (async (req, res) => {
-  const { userName, userPassword } = req.body;
-  const admin = await Admin.findOne({ where: { userName } });
-  if (!admin) {
-    return res.status(500).send('Something broke!');
-  }
-  const isPasswordValid = await bcrypt.compare(userPassword, admin.userPassword);
-  if (!isPasswordValid) {
-    return res.status(500).send('your password wrong try again!');
-  }
-  else{
+exports.postLogin = async (req, res) => {
+  try {
+    const { userName, userPassword } = req.body;
+    if (!userName || !userPassword) {
+      return res.status(400).send('Username and password are required.');
+    }
+    const admin = await Admin.findOne({ where: { userName } });
+    if (!admin) {
+      return res.status(401).send('Invalid username or password.');
+    }
+    const isPasswordValid = await bcrypt.compare(userPassword, admin.userPassword);
+    if (!isPasswordValid) {
+      return res.status(401).send('Invalid username or password.'); 
+    }
     req.session.admin = admin;
-    req.session.id = admin.id; 
-    res.redirect('/admin/dashboard');
-      }
-});
+    req.session.id = admin.id;
+
+    return res.status(200).send('Login successful.'); 
+  } catch (error) {
+    console.error('Login error:', error); 
+    return res.status(500).send('An unexpected error occurred.'); 
+  }
+};
+
   exports.logout=async(req, res) => {
     req.session.destroy();
     res.redirect('/admin/login');
@@ -54,14 +62,14 @@ exports.postLogin= (async (req, res) => {
         const HelpRequests = await HelpRequest.findAll();
         res.json({ users, HelpRequests });
       } else {
-        res.redirect('/admin/login');
+        res.status(401).json({ error: 'You need to be logged in as an admin to access this page' });
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  exports.deleteUser = (req, res, next) => {
+exports.deleteUser = (req, res, next) => {
     const id = req.params.id;
     console.log("User ID: ", id);
     if (!req.session.admin) {

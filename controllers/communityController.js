@@ -1,4 +1,5 @@
-const Story = require('../models/Story');
+const Story  = require('../models/Story');
+const Like = require('../models/like');
 exports.createStory = async (req, res) => {
     const { title, content } = req.body;
     const userId = req.session.userId;
@@ -43,7 +44,6 @@ exports.createStory = async (req, res) => {
     }
   };
 
-  
 exports.likeStory = async (req, res) => {
     const storyId = req.params.id;
     const userId = req.session.userId; 

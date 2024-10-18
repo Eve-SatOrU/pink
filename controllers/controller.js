@@ -126,6 +126,6 @@ exports.deleteProfile = async (req, res) => {
   await user.destroy();
   res.json({ message: 'User deleted successfully' });
   }catch(err) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 }

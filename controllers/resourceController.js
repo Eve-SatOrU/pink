@@ -5,7 +5,10 @@ const SEARCH_ENGINE_ID = process.env.SEARCH_ENGINE_ID;
 
 exports.searchResources = async (req, res) => {
   const { query } = req.query; 
-
+// user in the session 
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
   if (!query) {
     return res.status(400).json({ error: 'Query is required' });
   }

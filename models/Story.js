@@ -1,31 +1,32 @@
 const Sequelize = require('sequelize');
 const { DataTypes } = require('sequelize');
 const sequelize = require('../util/database');
+const { v4: uuidv4 } = require('uuid');
 
 const Story = sequelize.define('Story', {
-    title: {
-      type: Sequelize.STRING,
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: uuidv4,  
+    primaryKey: true,
+},
+  title: {
+      type: DataTypes.STRING,
       allowNull: false
-    },
-    content: {
-      type: Sequelize.TEXT,
+  },
+  content: {
+      type: DataTypes.TEXT,
       allowNull: false
-    },
-    likes_count: {
-      type: Sequelize.INTEGER,
+  },
+  likes_count: {
+      type: DataTypes.INTEGER,
       defaultValue: 0
-    }
-  });
-  
-  const Like = sequelize.define('Like', {
-    user_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
-    story_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    }
-  });  
+  },
+  author_id: {  
+    type: DataTypes.UUID,
+    defaultValue: uuidv4,  
+    allowNull: false
+  }
+});
 
-module.exports = { Story, Like };
+  
+module.exports =  Story;

@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: 'forgot about it girls xD',
     resave: false,
     saveUninitialized: true,
   })
@@ -36,6 +36,9 @@ const User = require('./models/user');
 const Admin = require('./models/admin');
 const HelpRequest = require('./models/HelpRequest');
 const Story = require('./models/Story');
+
+Story.belongsTo(User, { foreignKey: 'author_id' });
+User.hasMany(Story, { foreignKey: 'author_id' });
 
 sequelize.sync()
 .then(result => {
