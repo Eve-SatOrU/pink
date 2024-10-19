@@ -6,12 +6,14 @@ const { v4: uuidv4 } = require('uuid');
 
 const Like = sequelize.define('Like', {
     user_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
+      type: DataTypes.UUID,
+      defaultValue: uuidv4,  
+        allowNull: false
     },
     story_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
+      type: DataTypes.UUID,
+      defaultValue: uuidv4,  
+        allowNull: false
     }
   });  
 
